@@ -24,9 +24,6 @@ set_source_files_properties("ExprBuiltins.cpp" PROPERTIES COMPILE_DEFINITIONS "_
 #add_definitions(-DSEEXPR_DEBUG)
 #add_definitions(-DSEEXPR_PERFORMANCE)
 
-# Allow flex/bison to find the current directory
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
 ## find our parser generators
 find_program(BISON_EXE bison)
 find_program(FLEX_EXE flex)
@@ -84,10 +81,13 @@ endif()
 file(GLOB llvm_cpp "*.cpp")
 if (NOT WIN32)
     add_library(SeExpr2 SHARED ${io_cpp} ${core_cpp} ${parser_cpp} ${llvm_cpp})
-    target_link_libraries(SeExpr2 "dl" "pthread")
+    target_link_libraries(SeExpr2 PUBLIC "dl" "pthread")
 else()
     add_library(SeExpr2 STATIC ${io_cpp} ${core_cpp} ${parser_cpp} ${llvm_cpp})
 endif()
+
+target_include_directories(SeExpr2 PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/..")
+target_include_directories(SeExpr2 PUBLIC "${CMAKE_CURRENT_BINARY_DIR}")
 
 set_property(TARGET SeExpr2 PROPERTY VERSION ${SeExpr2_VERSION})
 set_property(TARGET SeExpr2 PROPERTY SOVERSION ${SeExpr2_MAJOR_VERSION})
@@ -112,12 +112,11 @@ configure_file("ExprConfig.h.in" "ExprConfig.h")
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/ExprConfig.h"
         COMPONENT devel DESTINATION ${INCLUDE_DIR})
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 if (ENABLE_LLVM_BACKEND)
     if (NOT WIN32)
-        target_link_libraries(SeExpr2 ${LLVM_LIB} "dl" "pthread")
+        target_link_libraries(SeExpr2 PUBLIC ${LLVM_LIB} "dl" "pthread")
     else ()
-        target_link_libraries(SeExpr2 ${LLVM_LIB})
+        target_link_libraries(SeExpr2 PUBLIC ${LLVM_LIB})
     endif ()
 endif()
