@@ -86,7 +86,8 @@ else()
     add_library(SeExpr2 STATIC ${io_cpp} ${core_cpp} ${parser_cpp} ${llvm_cpp})
 endif()
 
-target_include_directories(SeExpr2 PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/..")
+target_include_directories(SeExpr2 PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories(SeExpr2 INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/..")
 target_include_directories(SeExpr2 PUBLIC "${CMAKE_CURRENT_BINARY_DIR}")
 
 set_property(TARGET SeExpr2 PROPERTY VERSION ${SeExpr2_VERSION})
