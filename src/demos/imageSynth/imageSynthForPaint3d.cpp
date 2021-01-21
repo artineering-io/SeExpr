@@ -299,12 +299,12 @@ int main(int argc, char* argv[]) {
                  PNG_INTERLACE_NONE,
                  PNG_COMPRESSION_TYPE_DEFAULT,
                  PNG_FILTER_TYPE_DEFAULT);
-    const unsigned char* ptrs[height];
+    unsigned char** ptrs = new unsigned char*[height];
     for (int i = 0; i < height; i++) {
         ptrs[i] = &image[width * i * 4];
     }
     png_set_rows(png_ptr, info_ptr, (png_byte**)ptrs);
     png_write_png(png_ptr, info_ptr, PNG_TRANSFORM_IDENTITY, 0);
-
+    delete ptrs;
     fclose(fp);
 }
