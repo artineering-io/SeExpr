@@ -43,6 +43,9 @@ class Context {
     void setParent(const Context* context) { _parent = context; }
     const Context* getParent() const { return _parent; }
 
+    void setUserData(void* data) { _userData = data; }
+    void* getUserData() const { return _userData; }
+
     bool hasContext(const Context* context) const {
         if (this == context) return true;
         if (_parent) return _parent->hasContext(context);
@@ -66,5 +69,7 @@ class Context {
     typedef std::map<std::string, std::string> ParameterMap;
     /// Attribute/value pairs
     ParameterMap _parameters;
+    /// User data (for anything other than strings)
+    void* _userData;
 };
 }
