@@ -278,6 +278,7 @@ void Expression::prep() const {
         for (unsigned int i = 0; i < _errors.size(); i++) {
             auto bound = std::lower_bound(lines.begin(), lines.end(), _errors[i].startPos);
             int line = static_cast<int>(bound - lines.begin() + 1);
+            if (line > lines.size()) line = lines.size();
             int lineStart = line == 1 ? 0 : lines[line - 1];
             int col = _errors[i].startPos - lineStart;
             sstream << "  Line " << line << " Col " << col << " - " << _errors[i].error << std::endl;
